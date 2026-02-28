@@ -21,14 +21,22 @@ if (process.env.VERCEL === undefined) {
   if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify({}));
 }
 
-// Setup multer for file uploads (only in development)
+// Setup multer for file uploads (memory storage on Vercel, disk on local)
 const uploadDir = 'uploads';
 if (process.env.VERCEL === undefined && !fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
+// Use memory storage on Vercel, disk storage locally
+const storage = process.env.VERCEL !== undefined 
+  ? multer.memoryStorage() 
+  : multer.diskStorage({
+      destination: (req, file, cb) => cb(null, uploadDir),
+      filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+    });
+
 const upload = multer({
-  dest: uploadDir,
+  storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
   fileFilter: (req, file, cb) => {
     const mimeTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/webm', 'audio/ogg', 'audio/x-wav'];
