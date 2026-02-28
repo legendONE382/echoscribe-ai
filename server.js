@@ -207,6 +207,11 @@ function authMiddleware(req, res, next) {
   next();
 }
 
+// ========== ROOT ROUTE ==========
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // ========== AUTH ENDPOINTS ==========
 app.post('/api/signup', (req, res) => {
   try {
@@ -789,9 +794,14 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
+// Fallback to index.html for SPA routing (before 404 handler)
+app.get('*', (req, res) => {
+  // Only serve index.html for non-API requests
+  if (!req.path.startsWith('/api/')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    res.status(404).json({ error: 'Endpoint not found' });
+  }
 });
 
 // Error handler
