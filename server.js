@@ -796,11 +796,15 @@ app.get('/health', (req, res) => {
 
 // Fallback to index.html for SPA routing (before 404 handler)
 app.get('*', (req, res) => {
-  // Only serve index.html for non-API requests
-  if (!req.path.startsWith('/api/')) {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  } else {
+  // Don't serve index.html for API routes or static files
+  const isApiRoute = req.path.startsWith('/api/');
+  const hasExtension = /\.\w+$/.test(req.path); // Check if has file extension (.js, .css, .ico, etc)
+  
+  if (isApiRoute || hasExtension) {
     res.status(404).json({ error: 'Endpoint not found' });
+  } else {
+    // Serve index.html for all other routes (SPA routing)
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
 });
 
