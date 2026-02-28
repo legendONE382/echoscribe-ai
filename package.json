@@ -1,0 +1,31 @@
+{
+  "name": "voice-to-content-engine",
+  "version": "1.0.0",
+  "description": "AI Voice-to-Content Engine for Coaches - Transcribes audio and generates sharable content using free APIs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "form-data": "^4.0.4",
+    "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
+    "react-media-recorder": "^1.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "ai",
+    "voice",
+    "transcription",
+    "content",
+    "coaching"
+  ],
+  "author": "",
+  "license": "MIT"
+}
