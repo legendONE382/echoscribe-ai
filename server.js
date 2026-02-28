@@ -751,12 +751,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || 'Internal server error' });
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`\n✅ Server is running on port ${PORT}`);
-  console.log(`📍 Open http://localhost:${PORT}`);
-  console.log(`🔑 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🤖 Hugging Face API: ${process.env.HUGGINGFACE_API_KEY ? '✅ Configured' : '⚠️ Not configured'}`);
-  console.log(`🤖 Groq API: ${process.env.GROQ_API_KEY ? '✅ Configured' : '⚠️ Not configured'}\n`);
-});
+// Export for Vercel
+module.exports = app;
+
+// Start server locally (not on Vercel)
+if (process.env.VERCEL === undefined) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`\n✅ Server is running on port ${PORT}`);
+    console.log(`📍 Open http://localhost:${PORT}`);
+    console.log(`🔑 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🤖 Hugging Face API: ${process.env.HUGGINGFACE_API_KEY ? '✅ Configured' : '⚠️ Not configured'}`);
+    console.log(`🤖 Groq API: ${process.env.GROQ_API_KEY ? '✅ Configured' : '⚠️ Not configured'}\n`);
+  });
+}
