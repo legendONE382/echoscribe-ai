@@ -15,13 +15,15 @@ app.use(express.static('public'));
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const USERS_FILE = 'data/users.json';
 
-// Initialize users file
-if (!fs.existsSync('data')) fs.mkdirSync('data', { recursive: true });
-if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify({}));
+// Initialize users file (only in development, not on Vercel)
+if (process.env.VERCEL === undefined) {
+  if (!fs.existsSync('data')) fs.mkdirSync('data', { recursive: true });
+  if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify({}));
+}
 
-// Setup multer for file uploads
+// Setup multer for file uploads (only in development)
 const uploadDir = 'uploads';
-if (!fs.existsSync(uploadDir)) {
+if (process.env.VERCEL === undefined && !fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
@@ -116,7 +118,16 @@ function extractThemes(text) {
 }
 
 // ========== AUTH FUNCTIONS ==========
+// In-memory user storage for Vercel (since filesystem is read-only)
+let usersMemory = {};
+
 function loadUsers() {
+  // On Vercel, use in-memory storage
+  if (process.env.VERCEL !== undefined) {
+    return usersMemory;
+  }
+  
+  // In development, use file storage
   try {
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
   } catch (e) {
@@ -125,7 +136,18 @@ function loadUsers() {
 }
 
 function saveUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  // On Vercel, save to memory
+  if (process.env.VERCEL !== undefined) {
+    usersMemory = users;
+    return;
+  }
+  
+  // In development, save to file
+  try {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  } catch (e) {
+    console.error('Error saving users:', e.message);
+  }
 }
 
 function generateToken(user) {
