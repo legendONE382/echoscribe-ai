@@ -13,27 +13,12 @@ app.use(express.static('public'));
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-const USERS_FILE = 'data/users.json';
 
-// Initialize users file (only in development, not on Vercel)
-if (process.env.VERCEL === undefined) {
-  if (!fs.existsSync('data')) fs.mkdirSync('data', { recursive: true });
-  if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, JSON.stringify({}));
-}
-
-// Setup multer for file uploads (memory storage on Vercel, disk on local)
+// Setup multer for file uploads (memory storage always - no file persistence)
 const uploadDir = 'uploads';
-if (process.env.VERCEL === undefined && !fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
 
-// Use memory storage on Vercel, disk storage locally
-const storage = process.env.VERCEL !== undefined 
-  ? multer.memoryStorage() 
-  : multer.diskStorage({
-      destination: (req, file, cb) => cb(null, uploadDir),
-      filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
-    });
+// Use memory storage only (no file persistence)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -50,8 +35,7 @@ const upload = multer({
 
 let usageMinutes = 0;
 let userProfessions = {}; // Track user profession preferences
-let libraryMemory = {}; // In-memory library storage for Vercel
-const LIBRARY_FILE = 'data/library.json';
+let libraryMemory = {}; // In-memory library storage
 
 const PROFESSIONS = {
   'coaching': 'coach',
@@ -72,46 +56,15 @@ const PLATFORMS = {
   'email': 'Email Campaign'
 };
 
-// Initialize data directory (only on local development, not on Vercel)
-if (process.env.VERCEL === undefined) {
-  if (!fs.existsSync('data')) {
-    fs.mkdirSync('data', { recursive: true });
-  }
-  // Initialize library file if not exists
-  if (!fs.existsSync(LIBRARY_FILE)) {
-    fs.writeFileSync(LIBRARY_FILE, JSON.stringify({}));
-  }
-}
-
 // ========== HELPER FUNCTIONS ==========
 
+// Always use in-memory storage (RAM)
 function loadLibrary() {
-  // On Vercel, use in-memory storage
-  if (process.env.VERCEL !== undefined) {
-    return libraryMemory;
-  }
-  
-  // In development, use file storage
-  try {
-    return JSON.parse(fs.readFileSync(LIBRARY_FILE, 'utf8'));
-  } catch (e) {
-    return {};
-  }
+  return libraryMemory;
 }
 
 function saveLibrary(data) {
-  // On Vercel, save to memory
-  if (process.env.VERCEL !== undefined) {
-    libraryMemory = data;
-    return;
-  }
-  
-  // In development, save to file
-  try {
-    fs.writeFileSync(LIBRARY_FILE, JSON.stringify(data, null, 2));
-  } catch (e) {
-    console.error('Error saving library:', e.message);
-  }
+  libraryMemory = data;
 }
 
 function getOrCreateUserId(req) {
@@ -148,33 +101,13 @@ function extractThemes(text) {
 // In-memory user storage for Vercel (since filesystem is read-only)
 let usersMemory = {};
 
+// Always use in-memory storage (RAM)
 function loadUsers() {
-  // On Vercel, use in-memory storage
-  if (process.env.VERCEL !== undefined) {
-    return usersMemory;
-  }
-  
-  // In development, use file storage
-  try {
-    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-  } catch (e) {
-    return {};
-  }
+  return usersMemory;
 }
 
 function saveUsers(users) {
-  // On Vercel, save to memory
-  if (process.env.VERCEL !== undefined) {
-    usersMemory = users;
-    return;
-  }
-  
-  // In development, save to file
-  try {
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-  } catch (e) {
-    console.error('Error saving users:', e.message);
-  }
+  usersMemory = users;
 }
 
 function generateToken(user) {
