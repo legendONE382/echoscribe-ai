@@ -9,7 +9,21 @@ require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+
+// Serve static files from public directory
+const publicPath = path.join(__dirname, 'public');
+console.log('📁 Serving static files from:', publicPath);
+app.use(express.static(publicPath));
+
+// Also add a specific route for static files to ensure they're served
+app.use((req, res, next) => {
+  // Check if file exists in public directory
+  const filePath = path.join(publicPath, req.path);
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    return res.sendFile(filePath);
+  }
+  next();
+});
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
@@ -729,16 +743,19 @@ app.get('/health', (req, res) => {
 
 // Fallback to index.html for SPA routing (before 404 handler)
 app.get('*', (req, res) => {
-  // Don't serve index.html for API routes or static files
-  const isApiRoute = req.path.startsWith('/api/');
-  const hasExtension = /\.\w+$/.test(req.path); // Check if has file extension (.js, .css, .ico, etc)
-  
-  if (isApiRoute || hasExtension) {
-    res.status(404).json({ error: 'Endpoint not found' });
-  } else {
-    // Serve index.html for all other routes (SPA routing)
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Endpoint not found' });
   }
+  
+  // Try to serve as static file first
+  const filePath = path.join(__dirname, 'public', req.path);
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    return res.sendFile(filePath);
+  }
+  
+  // Fall back to SPA: serve index.html for all other routes
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Error handler
