@@ -8,7 +8,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
-app.use(express.json());
+
+// Increase body size limits for file uploads
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.raw({ limit: '100mb' }));
 
 // Serve static files from public directory
 const publicPath = path.join(__dirname, 'public');
@@ -36,7 +40,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   fileFilter: (req, file, cb) => {
     const mimeTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/webm', 'audio/ogg', 'audio/x-wav'];
     if (mimeTypes.includes(file.mimetype)) {
@@ -257,7 +261,6 @@ app.post('/profession', (req, res) => {
 
 // Transcribe endpoint - accepts audio file via multipart/form-data
 app.post('/transcribe', authMiddleware, upload.single('audio'), async (req, res) => {
-  let audioPath = null;
   try {
     const userId = req.user.id;
     
@@ -265,9 +268,10 @@ app.post('/transcribe', authMiddleware, upload.single('audio'), async (req, res)
       return res.status(400).json({ error: 'No audio file provided' });
     }
     
-    audioPath = req.file.path;
-    console.log(`\n📂 Processing audio file: ${audioPath} for user ${userId}`);
-    console.log(`📊 File size: ${(req.file.size / 1024 / 1024).toFixed(2)}MB`);
+    // Use buffer instead of file path since we're using memory storage
+    const audioBuffer = req.file.buffer;
+    console.log(`\n📂 Processing audio file for user ${userId}`);
+    console.log(`📊 File size: ${(audioBuffer.length / 1024 / 1024).toFixed(2)}MB`);
     
     let transcript = null;
     const HF_API_KEY = process.env.HUGGINGFACE_API_KEY || process.env.HF_API_KEY;
@@ -277,7 +281,6 @@ app.post('/transcribe', authMiddleware, upload.single('audio'), async (req, res)
     if (HF_API_KEY) {
       try {
         console.log('🤖 Attempting Hugging Face Whisper transcription...');
-        const audioBuffer = fs.readFileSync(audioPath);
         const form = new FormData();
         form.append('audio', audioBuffer, { filename: 'audio.wav' });
         
@@ -306,7 +309,6 @@ app.post('/transcribe', authMiddleware, upload.single('audio'), async (req, res)
     if (!transcript && GROQ_API_KEY) {
       try {
         console.log('🤖 Attempting Groq Whisper transcription...');
-        const audioBuffer = fs.readFileSync(audioPath);
         const form = new FormData();
         form.append('file', audioBuffer, { filename: 'audio.wav' });
         form.append('model', 'whisper-large-v3');
@@ -351,13 +353,6 @@ Finally, we outlined an action plan for implementing these insights over the nex
   } catch (error) {
     console.error('❌ Error transcribing:', error);
     res.status(500).json({ error: 'Transcription failed: ' + error.message });
-  } finally {
-    // Clean up uploaded file
-    if (audioPath && fs.existsSync(audioPath)) {
-      fs.unlink(audioPath, (err) => {
-        if (err) console.warn('Failed to delete temp file:', err);
-      });
-    }
   }
 });
 
