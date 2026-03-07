@@ -17,8 +17,17 @@ const userEmailDisplay = document.getElementById('userEmailDisplay');
 document.addEventListener('DOMContentLoaded', () => {
   checkAuthStatus();
   
-  loginForm.addEventListener('submit', handleLogin);
-  signupForm.addEventListener('submit', handleSignup);
+  if (loginForm) {
+    loginForm.addEventListener('submit', handleLogin);
+  } else {
+    console.error('❌ loginForm not found in DOM');
+  }
+  
+  if (signupForm) {
+    signupForm.addEventListener('submit', handleSignup);
+  } else {
+    console.error('❌ signupForm not found in DOM');
+  }
 });
 
 // ========== CHECK AUTH STATUS ==========
@@ -58,21 +67,27 @@ async function checkAuthStatus() {
 // ========== LOGIN ==========
 async function handleLogin(e) {
   e.preventDefault();
+  console.log('🔐 Login attempt...');
   
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
+  
+  console.log('📧 Email:', email);
   
   try {
     loginError.textContent = '';
     loginError.classList.remove('show');
     
+    console.log('🌐 Sending login request to /api/login...');
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
     
+    console.log('📡 Response status:', res.status);
     const data = await res.json();
+    console.log('📦 Response data:', data);
     
     if (!res.ok) {
       throw new Error(data.error || 'Login failed');
@@ -98,22 +113,28 @@ async function handleLogin(e) {
 // ========== SIGNUP ==========
 async function handleSignup(e) {
   e.preventDefault();
+  console.log('✍️ Signup attempt...');
   
   const name = document.getElementById('signupName').value;
   const email = document.getElementById('signupEmail').value;
   const password = document.getElementById('signupPassword').value;
   
+  console.log('👤 Name:', name, '| 📧 Email:', email);
+  
   try {
     signupError.textContent = '';
     signupError.classList.remove('show');
     
+    console.log('🌐 Sending signup request to /api/signup...');
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
     });
     
+    console.log('📡 Response status:', res.status);
     const data = await res.json();
+    console.log('📦 Response data:', data);
     
     if (!res.ok) {
       throw new Error(data.error || 'Signup failed');
@@ -174,12 +195,15 @@ function showApp() {
 }
 
 function toggleAuthPage(page) {
+  console.log('🔄 Toggling to page:', page);
   if (page === 'login') {
     loginPage.style.display = 'flex';
     signupPage.style.display = 'none';
+    console.log('✅ Showing login page');
   } else {
     loginPage.style.display = 'none';
     signupPage.style.display = 'flex';
+    console.log('✅ Showing signup page');
   }
 }
 
