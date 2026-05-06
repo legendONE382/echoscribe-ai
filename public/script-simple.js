@@ -1,3 +1,28 @@
+// ========== MOBILE MENU ==========
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('show');
+  
+  // Close sidebar when clicking outside on mobile
+  if (sidebar.classList.contains('show')) {
+    document.addEventListener('click', closeSidebarOnClickOutside);
+  } else {
+    document.removeEventListener('click', closeSidebarOnClickOutside);
+  }
+}
+
+function closeSidebarOnClickOutside(e) {
+  const sidebar = document.getElementById('sidebar');
+  const menuToggle = document.getElementById('menuToggle');
+  
+  if (window.innerWidth <= 768) {
+    if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+      sidebar.classList.remove('show');
+      document.removeEventListener('click', closeSidebarOnClickOutside);
+    }
+  }
+}
+
 // ========== USER & STATE ==========
 let userId = localStorage.getItem('userId') || `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 localStorage.setItem('userId', userId);
