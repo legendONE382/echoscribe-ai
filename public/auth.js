@@ -5,6 +5,7 @@ let authToken = null;
 // ========== DOM ELEMENTS ==========
 const authPages = document.getElementById('authPages');
 const appLayout = document.getElementById('appLayout');
+const landingPage = document.getElementById('landingPage');
 const loginPage = document.getElementById('loginPage');
 const signupPage = document.getElementById('signupPage');
 const loginForm = document.getElementById('loginForm');
@@ -175,6 +176,7 @@ function logout() {
 function showAuth() {
   authPages.style.display = 'block';
   appLayout.classList.remove('show');
+  toggleAuthPage('landing');
 }
 
 function showApp() {
@@ -196,15 +198,16 @@ function showApp() {
 
 function toggleAuthPage(page) {
   console.log('🔄 Toggling to page:', page);
-  if (page === 'login') {
-    loginPage.style.display = 'flex';
-    signupPage.style.display = 'none';
-    console.log('✅ Showing login page');
-  } else {
-    loginPage.style.display = 'none';
-    signupPage.style.display = 'flex';
-    console.log('✅ Showing signup page');
+
+  landingPage.style.display = page === 'landing' ? 'block' : 'none';
+  loginPage.style.display = page === 'login' ? 'flex' : 'none';
+  signupPage.style.display = page === 'signup' ? 'flex' : 'none';
+
+  if (page === 'landing') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  console.log(`✅ Showing ${page} page`);
 }
 
 // ========== GET AUTH HEADERS ==========

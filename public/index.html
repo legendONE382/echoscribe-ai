@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="google-site-verification" content="xbSDnvWUpVwwPQIOFKmeJu-5jykqXZ5RTL8RRe88FfE" />
+  <meta name="description" content="EchoScribe AI turns recordings and voice notes into polished social posts, newsletters, blogs, emails, and scripts tailored to your profession and tone." />
   <title>EchoScribe AI - Voice to Content</title>
   <style>
 * {
@@ -243,6 +244,438 @@ html, body {
   .btn-auth {
     min-height: 44px;
   }
+}
+
+
+
+/* ===== LANDING PAGE ===== */
+.landing-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0,212,170,0.22), transparent 34%),
+    radial-gradient(circle at 85% 18%, rgba(99,102,241,0.22), transparent 32%),
+    radial-gradient(circle at 50% 90%, rgba(0,168,129,0.16), transparent 34%);
+}
+
+.landing-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent 85%);
+  pointer-events: none;
+}
+
+.landing-shell {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 18px;
+  background: rgba(10,13,18,0.62);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.24);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-light);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 12px 30px rgba(0,212,170,0.25);
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.landing-link,
+.landing-ghost,
+.landing-cta {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+}
+
+.landing-link {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 10px 4px;
+}
+
+.landing-link:hover { color: var(--primary-light); }
+
+.landing-ghost {
+  color: var(--text-light);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+}
+
+.landing-ghost:hover {
+  border-color: rgba(0,212,170,0.45);
+  color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.landing-cta {
+  color: var(--bg-darker);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  padding: 12px 20px;
+  box-shadow: 0 14px 34px rgba(0,212,170,0.28);
+}
+
+.landing-cta:hover { transform: translateY(-3px); box-shadow: 0 18px 42px rgba(0,212,170,0.4); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+  gap: 46px;
+  align-items: center;
+  padding: 82px 0 52px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-light);
+  background: rgba(0,212,170,0.1);
+  border: 1px solid rgba(0,212,170,0.22);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 22px;
+}
+
+.hero-copy h1 {
+  font-size: clamp(42px, 7vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-light), #ffffff 44%, var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-copy p {
+  color: #c7d2fe;
+  font-size: clamp(17px, 2vw, 21px);
+  max-width: 650px;
+  margin-bottom: 30px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.trust-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.trust-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hero-card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(15,23,36,0.88), rgba(15,23,36,0.48));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 30px;
+  padding: 26px;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.38);
+  backdrop-filter: blur(18px);
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0,212,170,0.7), rgba(99,102,241,0.45), transparent);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.mock-window {
+  background: rgba(4,7,12,0.62);
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.mock-topbar {
+  display: flex;
+  gap: 7px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.8;
+}
+
+.mock-body { padding: 22px; }
+
+.waveform {
+  display: flex;
+  align-items: end;
+  gap: 7px;
+  height: 88px;
+  margin-bottom: 22px;
+}
+
+.waveform span {
+  flex: 1;
+  border-radius: 999px;
+  background: linear-gradient(to top, var(--primary), var(--secondary));
+  min-height: 20px;
+  animation: pulseWave 1.8s ease-in-out infinite;
+}
+
+.waveform span:nth-child(2n) { animation-delay: .18s; }
+.waveform span:nth-child(3n) { animation-delay: .32s; }
+
+@keyframes pulseWave {
+  0%, 100% { transform: scaleY(.68); opacity: .72; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.output-preview {
+  display: grid;
+  gap: 12px;
+}
+
+.preview-pill {
+  width: max-content;
+  color: var(--primary-light);
+  background: rgba(0,212,170,0.12);
+  border: 1px solid rgba(0,212,170,0.22);
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.preview-line {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+}
+
+.preview-line.short { width: 72%; }
+.preview-line.medium { width: 88%; }
+
+.feature-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 16px 0 58px;
+}
+
+.feature-card {
+  background: rgba(15,23,36,0.56);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+}
+
+.feature-card strong {
+  display: block;
+  color: var(--text-light);
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.workflow-section {
+  padding: 8px 0 62px;
+  text-align: center;
+}
+
+.workflow-section h2 {
+  font-size: clamp(28px, 4vw, 42px);
+  margin-bottom: 12px;
+}
+
+.workflow-section > p {
+  color: var(--text-muted);
+  max-width: 680px;
+  margin: 0 auto 28px;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  text-align: left;
+}
+
+.workflow-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025));
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 24px;
+}
+
+.step-number {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(0,212,170,0.15);
+  color: var(--primary-light);
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+.workflow-card h3 { margin-bottom: 8px; }
+.workflow-card p { color: var(--text-muted); font-size: 14px; }
+
+.final-cta {
+  text-align: center;
+  margin: 0 auto 44px;
+  padding: 38px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(0,212,170,0.16), rgba(99,102,241,0.16));
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.final-cta h2 { font-size: clamp(26px, 4vw, 40px); margin-bottom: 10px; }
+.final-cta p { color: var(--text-muted); margin-bottom: 22px; }
+
+/* ===== APP UI ENHANCEMENTS ===== */
+.app-kicker {
+  display: inline-flex;
+  margin-bottom: 14px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: var(--primary-light);
+  background: rgba(0,212,170,0.1);
+  border: 1px solid rgba(0,212,170,0.18);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+
+.upload-card {
+  border: 1px dashed rgba(0,212,170,0.35);
+  border-radius: 22px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(99,102,241,0.07));
+}
+
+.upload-hint {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 26px 0 0;
+}
+
+.quick-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.quick-stat strong {
+  display: block;
+  color: var(--primary-light);
+  font-size: 18px;
+}
+
+.quick-stat span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.sidebar-tip,
+.empty-state {
+  border: 1px solid rgba(0,212,170,0.16);
+  background: rgba(0,212,170,0.06);
+  border-radius: 14px;
+  padding: 14px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 18px;
+}
+
+.empty-state strong {
+  display: block;
+  color: var(--text-light);
+  margin-bottom: 8px;
 }
 
 /* ===== APP LAYOUT ===== */
@@ -1055,6 +1488,26 @@ html, body {
   }
 }
 
+
+@media (max-width: 900px) {
+  .landing-page { padding: 16px; }
+  .landing-nav { align-items: flex-start; flex-direction: column; }
+  .nav-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  .hero-grid { grid-template-columns: 1fr; padding: 46px 0 34px; gap: 28px; }
+  .hero-copy h1 { letter-spacing: -1.5px; }
+  .feature-strip,
+  .workflow-grid { grid-template-columns: 1fr; }
+  .quick-stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .landing-cta,
+  .landing-ghost { width: 100%; text-align: center; }
+  .hero-actions { flex-direction: column; }
+  .hero-card { padding: 16px; border-radius: 22px; }
+  .final-cta { padding: 26px 18px; }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -1077,13 +1530,89 @@ html, body {
 
 <!-- AUTH PAGES -->
 <div id="authPages">
+  <!-- LANDING PAGE -->
+  <section id="landingPage" class="landing-page">
+    <div class="landing-shell">
+      <nav class="landing-nav" aria-label="Landing navigation">
+        <div class="brand-lockup">
+          <div class="brand-mark">🎙️</div>
+          <span>EchoScribe AI</span>
+        </div>
+        <div class="nav-actions">
+          <button class="landing-link" type="button" onclick="document.getElementById('workflow').scrollIntoView({ behavior: 'smooth' })">How it works</button>
+          <button class="landing-ghost" type="button" onclick="toggleAuthPage('login')">Sign in</button>
+          <button class="landing-cta" type="button" onclick="toggleAuthPage('signup')">Start free</button>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">⚡ Built for coaches, creators, teams, and educators</div>
+          <h1><span class="gradient-text">Turn every voice note</span> into polished content.</h1>
+          <p>EchoScribe AI transcribes your audio and repurposes the best ideas into LinkedIn posts, Twitter/X threads, newsletters, blogs, emails, and short-form scripts — matched to your profession and tone.</p>
+          <div class="hero-actions">
+            <button class="landing-cta" type="button" onclick="toggleAuthPage('signup')">Create my first draft</button>
+            <button class="landing-ghost" type="button" onclick="toggleAuthPage('login')">I already have an account</button>
+          </div>
+          <div class="trust-row" aria-label="Product highlights">
+            <span>✅ Upload or record audio</span>
+            <span>✅ Profession-aware prompts</span>
+            <span>✅ Multi-platform drafts</span>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="EchoScribe AI product preview">
+          <div class="mock-window">
+            <div class="mock-topbar"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
+            <div class="mock-body">
+              <div class="waveform" aria-hidden="true">
+                <span style="height: 48%"></span><span style="height: 82%"></span><span style="height: 35%"></span><span style="height: 92%"></span><span style="height: 58%"></span><span style="height: 76%"></span><span style="height: 44%"></span><span style="height: 88%"></span><span style="height: 52%"></span>
+              </div>
+              <div class="output-preview">
+                <div class="preview-pill">LinkedIn draft ready</div>
+                <div class="preview-line"></div>
+                <div class="preview-line medium"></div>
+                <div class="preview-line short"></div>
+                <div class="preview-pill">Newsletter outline</div>
+                <div class="preview-line medium"></div>
+                <div class="preview-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-strip">
+        <div class="feature-card"><strong>Repurpose faster</strong><p>Convert a call, lesson, podcast clip, or spontaneous idea into several ready-to-edit formats in one workflow.</p></div>
+        <div class="feature-card"><strong>Sound like yourself</strong><p>Choose professional, casual, technical, motivational, or educational tone to keep every draft on-brand.</p></div>
+        <div class="feature-card"><strong>Publish with confidence</strong><p>Generate content for LinkedIn, Twitter/X, Instagram, TikTok, YouTube, newsletters, blogs, and email.</p></div>
+      </div>
+
+      <section class="workflow-section" id="workflow">
+        <h2>From recording to publish-ready in three steps.</h2>
+        <p>Skip the blank page. Capture your raw thoughts, let EchoScribe extract the message, then refine and share the content where your audience already is.</p>
+        <div class="workflow-grid">
+          <div class="workflow-card"><div class="step-number">1</div><h3>Record or upload</h3><p>Add an audio file or capture a fresh voice note directly in the app.</p></div>
+          <div class="workflow-card"><div class="step-number">2</div><h3>Customize output</h3><p>Select your profession, preferred tone, and the channels you want to create for.</p></div>
+          <div class="workflow-card"><div class="step-number">3</div><h3>Copy, download, post</h3><p>Review generated drafts, copy them to your clipboard, or download your content pack.</p></div>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <h2>Your next great post is probably already in your voice notes.</h2>
+        <p>Create an account and transform your first recording into a complete content kit.</p>
+        <button class="landing-cta" type="button" onclick="toggleAuthPage('signup')">Get started now</button>
+      </section>
+    </div>
+  </section>
+
   <!-- LOGIN PAGE -->
-  <div id="loginPage" class="auth-container">
+  <div id="loginPage" class="auth-container" style="display: none;">
     <div class="auth-box">
       <div class="auth-logo">
         <div class="logo">🎙️</div>
-        <h1>EchoScribe AI</h1>
-        <p>Voice-to-Content in Seconds</p>
+        <h1>Welcome back</h1>
+        <p>Sign in to keep turning ideas into content</p>
       </div>
       <form id="loginForm" class="auth-form">
         <div id="loginError" class="error-msg"></div>
@@ -1097,7 +1626,8 @@ html, body {
         </div>
         <button type="submit" class="btn-auth">Sign In</button>
         <div class="auth-toggle">
-          Don't have an account? <a onclick="toggleAuthPage('signup')">Create one</a>
+          New to EchoScribe? <a onclick="toggleAuthPage('signup')">Create an account</a><br>
+          <a onclick="toggleAuthPage('landing')">Back to overview</a>
         </div>
       </form>
     </div>
@@ -1109,7 +1639,7 @@ html, body {
       <div class="auth-logo">
         <div class="logo">🎙️</div>
         <h1>Join EchoScribe AI</h1>
-        <p>Start creating amazing content</p>
+        <p>Start creating platform-ready content</p>
       </div>
       <form id="signupForm" class="auth-form">
         <div id="signupError" class="error-msg"></div>
@@ -1127,7 +1657,8 @@ html, body {
         </div>
         <button type="submit" class="btn-auth">Create Account</button>
         <div class="auth-toggle">
-          Already have an account? <a onclick="toggleAuthPage('login')">Sign in</a>
+          Already have an account? <a onclick="toggleAuthPage('login')">Sign in</a><br>
+          <a onclick="toggleAuthPage('landing')">Back to overview</a>
         </div>
       </form>
     </div>
@@ -1154,7 +1685,7 @@ html, body {
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <button class="sidebar-close" id="sidebarClose" onclick="toggleSidebar()">✕</button>
-    <h2>Settings</h2>
+    <h2>Content Studio</h2>
     
     <div class="setting-group">
       <label>Your Profession</label>
@@ -1191,25 +1722,35 @@ html, body {
         <label><input type="checkbox" name="platform" value="email"> Email</label>
       </div>
     </div>
+
+    <div class="sidebar-tip">💡 Tip: choose a profession and tone before generating so EchoScribe can shape drafts for your audience.</div>
   </aside>
 
   <!-- MAIN AREA -->
   <main class="main-area">
     <div class="upload-area">
+      <div class="app-kicker">AI Content Workspace</div>
       <h1>🎙️ Voice to Content</h1>
-      <p>Upload audio or record directly and get platform-ready content instantly</p>
+      <p>Upload audio or record directly and get platform-ready content instantly for every channel you selected.</p>
       
-      <div class="upload-section">
-        <input type="file" id="audioFile" accept="audio/*" style="display: none;">
-        <button class="btn-primary" onclick="document.getElementById('audioFile').click()">📤 Upload Audio</button>
-        
-        <div style="margin: 16px 0; text-align: center; color: var(--text-muted); font-size: 13px;">
-          OR
+      <div class="upload-card">
+        <div class="upload-section">
+          <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+          <button class="btn-primary" onclick="document.getElementById('audioFile').click()">📤 Upload Audio</button>
+          
+          <div class="upload-divider">OR CAPTURE A NEW IDEA</div>
+          
+          <button class="btn-primary" id="recordBtn">🎤 Start Recording</button>
+          <button class="btn-danger" id="stopRecordBtn" style="display: none;">⏹️ Stop Recording</button>
+          <audio id="audioPlayback" controls style="width: 100%; margin-top: 16px; display: none;"></audio>
         </div>
-        
-        <button class="btn-primary" id="recordBtn">🎤 Start Recording</button>
-        <button class="btn-danger" id="stopRecordBtn" style="display: none;">⏹️ Stop Recording</button>
-        <audio id="audioPlayback" controls style="width: 100%; margin-top: 16px; display: none;"></audio>
+        <p class="upload-hint">Supports common audio files. Best results come from clear speech and one core idea per recording.</p>
+      </div>
+
+      <div class="quick-stats" aria-label="EchoScribe workflow benefits">
+        <div class="quick-stat"><strong>8</strong><span>content destinations</span></div>
+        <div class="quick-stat"><strong>5</strong><span>voice tones</span></div>
+        <div class="quick-stat"><strong>1</strong><span>recording to content kit</span></div>
       </div>
 
       <div id="transcriptArea">
@@ -1232,7 +1773,7 @@ html, body {
     <div id="platformTabs" class="tab-container"></div>
 
     <div id="panelBody" class="panel-content">
-      <p style="color: var(--text-muted); text-align: center;">Upload audio to generate content for your selected platforms</p>
+      <div class="empty-state"><strong>Your drafts will appear here</strong><p>Upload or record audio, then generate content to review channel-specific drafts in this panel.</p></div>
     </div>
 
     <div id="actionButtons">
