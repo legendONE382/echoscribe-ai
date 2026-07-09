@@ -38,15 +38,28 @@ const uploadDir = 'uploads';
 // Use memory storage only (no file persistence)
 const storage = multer.memoryStorage();
 
+// Accepted audio MIME types (broad) plus a fallback by file extension,
+// since browsers report inconsistent / empty MIME types for many audio files
+// (e.g. iOS voice memos are .m4a -> audio/mp4 or audio/x-m4a).
+const AUDIO_MIME_TYPES = new Set([
+  'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave',
+  'audio/webm', 'audio/ogg', 'audio/opus', 'audio/flac', 'audio/aac',
+  'audio/x-m4a', 'audio/mp4', 'audio/amr', 'audio/x-ms-wma',
+  'audio/3gpp', 'audio/3gpp2', 'application/octet-stream'
+]);
+
+const AUDIO_EXTENSIONS = /\.(mp3|wav|wave|webm|ogg|opus|flac|aac|m4a|mp4|amr|wma|3gp|3g2|aiff|ape|midi?)$/i;
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   fileFilter: (req, file, cb) => {
-    const mimeTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/webm', 'audio/ogg', 'audio/x-wav'];
-    if (mimeTypes.includes(file.mimetype)) {
+    const isAudioMime = AUDIO_MIME_TYPES.has(file.mimetype) || (file.mimetype || '').startsWith('audio/');
+    const isAudioExt = AUDIO_EXTENSIONS.test(file.originalname || '');
+    if (isAudioMime || isAudioExt) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid audio format. Please use MP3, WAV, WebM, or OGG.'));
+      cb(new Error('Invalid audio format. Please upload a supported audio file (MP3, WAV, M4A, WebM, OGG, AAC, FLAC, etc.).'));
     }
   }
 });
