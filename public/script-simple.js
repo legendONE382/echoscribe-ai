@@ -2,8 +2,7 @@
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.toggle('show');
-  
-  // Close sidebar when clicking outside on mobile
+
   if (sidebar.classList.contains('show')) {
     document.addEventListener('click', closeSidebarOnClickOutside);
   } else {
@@ -14,7 +13,7 @@ function toggleSidebar() {
 function closeSidebarOnClickOutside(e) {
   const sidebar = document.getElementById('sidebar');
   const menuToggle = document.getElementById('menuToggle');
-  
+
   if (window.innerWidth <= 768) {
     if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
       sidebar.classList.remove('show');
@@ -48,13 +47,19 @@ const regenerateBtn = document.getElementById('regenerateBtn');
 const professionSelect = document.getElementById('profession');
 const toneSelect = document.getElementById('tone');
 
+// ========== AUTH HEADERS ==========
+function getAuthHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${authToken || ''}`
+  };
+}
+
 // ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', () => {
-  // Load saved preferences
   professionSelect.value = localStorage.getItem('profession') || 'coaching';
   toneSelect.value = localStorage.getItem('tone') || 'professional';
 
-  // Update profession on change
   professionSelect.addEventListener('change', (e) => {
     localStorage.setItem('profession', e.target.value);
     fetch('/profession', {
@@ -64,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(err => console.error('❌ Profession update failed:', err));
   });
 
-  // Persist tone selection
   toneSelect.addEventListener('change', (e) => {
     localStorage.setItem('tone', e.target.value);
   });
@@ -74,35 +78,30 @@ document.addEventListener('DOMContentLoaded', () => {
 audioFile.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  
-  console.log(`📤 File selected: ${file.name}`);
   handleUpload(file);
 });
 
 async function handleUpload(file) {
   const formData = new FormData();
   formData.append('audio', file);
-  
+
   showLoading(true);
   transcriptArea.style.display = 'none';
-  
+
   try {
-    console.log('🚀 Uploading and transcribing...');
     const res = await fetch('/transcribe', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${authToken}` },
       body: formData
     });
-    
+
     if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    
+
     const data = await res.json();
-    console.log('✅ Transcription complete');
-    
     lastTranscript = data.transcript || '';
     transcriptText.textContent = lastTranscript;
     transcriptArea.style.display = 'block';
-    
+
   } catch (err) {
     console.error('❌ Upload failed:', err);
     transcriptText.textContent = 'Error: Failed to transcribe. Please try again.';
@@ -121,7 +120,7 @@ recordBtn.addEventListener('click', async () => {
     mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     recorder = new MediaRecorder(mediaStream);
     const chunks = [];
-    
+
     recorder.ondataavailable = (e) => chunks.push(e.data);
     recorder.onstop = () => {
       recordedBlob = new Blob(chunks, { type: 'audio/webm' });
@@ -129,11 +128,10 @@ recordBtn.addEventListener('click', async () => {
       audioPlayback.src = url;
       audioPlayback.style.display = 'block';
     };
-    
+
     recorder.start();
     recordBtn.style.display = 'none';
     stopRecordBtn.style.display = 'block';
-    console.log('🎤 Recording started...');
   } catch (err) {
     console.error('❌ Microphone access denied:', err);
     alert('Microphone access denied. Please allow microphone access.');
@@ -147,11 +145,9 @@ stopRecordBtn.addEventListener('click', () => {
   }
   recordBtn.style.display = 'block';
   stopRecordBtn.style.display = 'none';
-  
-  // Use the recording
+
   setTimeout(() => {
     if (recordedBlob) {
-      console.log('📝 Using recorded audio');
       handleUpload(new File([recordedBlob], 'recording.webm', { type: 'audio/webm' }));
     }
   }, 500);
@@ -165,40 +161,36 @@ async function generateContent() {
     alert('No transcript available');
     return;
   }
-  
-  // Get selected platforms
+
   const platformChecks = document.querySelectorAll('input[name="platform"]:checked');
   const platforms = Array.from(platformChecks).map(el => el.value);
-  
+
   if (platforms.length === 0) {
     alert('Please select at least one platform');
     return;
   }
-  
+
   const tone = toneSelect.value;
-  
+
   showLoading(true);
-  panelBody.innerHTML = '<p style="text-align: center; color: #888;">Generating content...</p>';
-  
+  panelBody.innerHTML = '<p style="text-align: center; color: #888; padding: 40px 0;">Generating content…</p>';
+
   try {
-    console.log(`🤖 Generating content for: ${platforms.join(', ')}`);
     const res = await fetch('/generate-content', {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ transcript: lastTranscript, tone, platforms })
     });
-    
+
     if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    
+
     const data = await res.json();
-    console.log('✅ Content generation complete');
-    
     lastPlatforms = data.platforms || {};
     displayResults(lastPlatforms);
-    
+
   } catch (err) {
     console.error('❌ Generation failed:', err);
-    panelBody.innerHTML = '<p style="color: #f44;">Error generating content. Please try again.</p>';
+    panelBody.innerHTML = '<p style="color: #f44; text-align: center; padding: 40px 0;">Error generating content. Please try again.</p>';
   } finally {
     showLoading(false);
   }
@@ -206,12 +198,11 @@ async function generateContent() {
 
 // ========== DISPLAY RESULTS ==========
 function displayResults(platforms) {
-  // Create tabs
   platformTabs.innerHTML = '';
   panelBody.innerHTML = '';
-  
+
   const platformList = Object.keys(platforms);
-  
+
   platformList.forEach((platform, idx) => {
     const tab = document.createElement('button');
     tab.className = `tab ${idx === 0 ? 'active' : ''}`;
@@ -219,21 +210,18 @@ function displayResults(platforms) {
     tab.onclick = () => switchTab(platform, tab);
     platformTabs.appendChild(tab);
   });
-  
-  // Display first platform content
+
   if (platformList.length > 0) {
     switchTab(platformList[0], platformTabs.firstChild);
   }
-  
+
   actionButtons.style.display = 'flex';
 }
 
 function switchTab(platform, tabEl) {
-  // Update active tab
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   tabEl.classList.add('active');
-  
-  // Display content
+
   const content = lastPlatforms[platform] || '';
   panelBody.innerHTML = `
     <div class="content-section">
@@ -248,10 +236,15 @@ copyBtn.addEventListener('click', () => {
   const content = Array.from(document.querySelectorAll('.platform-text'))
     .map(el => el.textContent)
     .join('\n\n---\n\n');
-  
+
+  if (!content) {
+    alert('No content to copy');
+    return;
+  }
+
   navigator.clipboard.writeText(content).then(() => {
-    console.log('✅ Copied to clipboard');
-    alert('Content copied to clipboard!');
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
   }).catch(err => console.error('Copy failed:', err));
 });
 
@@ -259,7 +252,12 @@ downloadBtn.addEventListener('click', () => {
   const content = Array.from(document.querySelectorAll('.platform-text'))
     .map(el => el.textContent)
     .join('\n\n---\n\n');
-  
+
+  if (!content) {
+    alert('No content to download');
+    return;
+  }
+
   const blob = new Blob([content], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -267,7 +265,6 @@ downloadBtn.addEventListener('click', () => {
   a.download = `content_${new Date().toISOString().slice(0, 10)}.txt`;
   a.click();
   URL.revokeObjectURL(url);
-  console.log('✅ Content downloaded');
 });
 
 regenerateBtn.addEventListener('click', generateContent);
@@ -276,4 +273,5 @@ regenerateBtn.addEventListener('click', generateContent);
 function showLoading(show) {
   loadingArea.style.display = show ? 'block' : 'none';
   generateBtn.disabled = show;
+  generateBtn.textContent = show ? '⏳ Processing…' : '✨ Generate Content';
 }

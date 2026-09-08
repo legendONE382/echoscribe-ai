@@ -17,13 +17,13 @@ const userEmailDisplay = document.getElementById('userEmailDisplay');
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', () => {
   checkAuthStatus();
-  
+
   if (loginForm) {
     loginForm.addEventListener('submit', handleLogin);
   } else {
     console.error('❌ loginForm not found in DOM');
   }
-  
+
   if (signupForm) {
     signupForm.addEventListener('submit', handleSignup);
   } else {
@@ -35,18 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
 async function checkAuthStatus() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('currentUser');
-  
+
   if (token && user) {
     try {
-      // Verify token with backend
       const res = await fetch('/api/verify-token', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       if (res.ok) {
         currentUser = JSON.parse(user);
         authToken = token;
@@ -56,54 +55,45 @@ async function checkAuthStatus() {
     } catch (err) {
       console.error('Token verification failed:', err);
     }
-    
-    // Token invalid, clear storage
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
   }
-  
+
   showAuth();
 }
 
 // ========== LOGIN ==========
 async function handleLogin(e) {
   e.preventDefault();
-  console.log('🔐 Login attempt...');
-  
+
   const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
-  
-  console.log('📧 Email:', email);
-  
+
   try {
     loginError.textContent = '';
     loginError.classList.remove('show');
-    
-    console.log('🌐 Sending login request to /api/login...');
+
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-    
-    console.log('📡 Response status:', res.status);
+
     const data = await res.json();
-    console.log('📦 Response data:', data);
-    
+
     if (!res.ok) {
       throw new Error(data.error || 'Login failed');
     }
-    
-    // Save auth data
+
     currentUser = data.user;
     authToken = data.token;
     localStorage.setItem('authToken', authToken);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    
-    console.log('✅ Login successful');
+
     loginForm.reset();
     showApp();
-    
+
   } catch (err) {
     console.error('❌ Login error:', err);
     loginError.textContent = err.message;
@@ -114,44 +104,35 @@ async function handleLogin(e) {
 // ========== SIGNUP ==========
 async function handleSignup(e) {
   e.preventDefault();
-  console.log('✍️ Signup attempt...');
-  
+
   const name = document.getElementById('signupName').value;
   const email = document.getElementById('signupEmail').value;
   const password = document.getElementById('signupPassword').value;
-  
-  console.log('👤 Name:', name, '| 📧 Email:', email);
-  
+
   try {
     signupError.textContent = '';
     signupError.classList.remove('show');
-    
-    console.log('🌐 Sending signup request to /api/signup...');
+
     const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
     });
-    
-    console.log('📡 Response status:', res.status);
+
     const data = await res.json();
-    console.log('📦 Response data:', data);
-    
+
     if (!res.ok) {
       throw new Error(data.error || 'Signup failed');
     }
-    
-    console.log('✅ Account created successfully');
-    
-    // Auto-login after signup
+
     currentUser = data.user;
     authToken = data.token;
     localStorage.setItem('authToken', authToken);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    
+
     signupForm.reset();
     showApp();
-    
+
   } catch (err) {
     console.error('❌ Signup error:', err);
     signupError.textContent = err.message;
@@ -166,8 +147,7 @@ function logout() {
     authToken = null;
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
-    
-    console.log('✅ Logged out');
+
     showAuth();
   }
 }
@@ -182,23 +162,19 @@ function showAuth() {
 function showApp() {
   authPages.style.display = 'none';
   appLayout.classList.add('show');
-  
-  // Update UI
+
   if (currentUser) {
     userEmailDisplay.textContent = currentUser.email;
   }
-  
-  // Load saved preferences
+
   const profession = localStorage.getItem('profession') || 'coaching';
   const tone = localStorage.getItem('tone') || 'professional';
-  
+
   document.getElementById('profession').value = profession;
   document.getElementById('tone').value = tone;
 }
 
 function toggleAuthPage(page) {
-  console.log('🔄 Toggling to page:', page);
-
   landingPage.style.display = page === 'landing' ? 'block' : 'none';
   loginPage.style.display = page === 'login' ? 'flex' : 'none';
   signupPage.style.display = page === 'signup' ? 'flex' : 'none';
@@ -206,8 +182,6 @@ function toggleAuthPage(page) {
   if (page === 'landing') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  console.log(`✅ Showing ${page} page`);
 }
 
 // ========== GET AUTH HEADERS ==========
